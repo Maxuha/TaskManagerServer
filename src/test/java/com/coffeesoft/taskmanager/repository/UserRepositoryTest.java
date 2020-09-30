@@ -1,25 +1,18 @@
 package com.coffeesoft.taskmanager.repository;
 
-import com.coffeesoft.taskmanager.exception.UserNotExistException;
-import com.coffeesoft.taskmanager.model.EntityField;
 import com.coffeesoft.taskmanager.model.User;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.test.context.junit4.SpringRunner;
 
 import javax.persistence.EntityManager;
 import java.util.Optional;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.Assert.*;
 
-@RunWith(SpringRunner.class)
 @DataJpaTest
-
 public class UserRepositoryTest {
 
     @Autowired
@@ -30,7 +23,7 @@ public class UserRepositoryTest {
 
     private User user;
 
-    @Before
+    @BeforeEach
     public void setUp() {
         user = new User();
         user.setFullName("Ivan Ivanov");
@@ -59,7 +52,7 @@ public class UserRepositoryTest {
     public void findAllContent() {
         List<User> users = userRepository.findAll();
 
-        assertEquals(user, users.get(0));
+        assertThat(users.get(0)).isEqualTo(user);
     }
 
     @Test
@@ -68,16 +61,16 @@ public class UserRepositoryTest {
 
         Optional<User> userFromDb = userRepository.findByUsername(username);
 
-        assertTrue(userFromDb.isPresent());
+        assertThat(userFromDb).isPresent();
         assertThat(userFromDb.get().getId()).isEqualTo(user.getId());
     }
 
-    @Test(expected = UserNotExistException.class)
-    public void findByUsernameNotExist() throws UserNotExistException {
+    @Test
+    public void findByUsernameNotExist() {
         final String username = user.getUsername() + "1";
         Optional<User> userFromDb = userRepository.findByUsername(username);
 
-        assertThat(userFromDb.orElseThrow(() -> new UserNotExistException(new EntityField(username, "username"))));
+        assertThat(userFromDb).isNotPresent();
     }
 
     @Test
@@ -86,17 +79,17 @@ public class UserRepositoryTest {
 
         Optional<User> userFromDb = userRepository.findById(id);
 
-        assertTrue(userFromDb.isPresent());
+        assertThat(userFromDb).isPresent();
         assertThat(userFromDb.get().getUsername()).isEqualTo(user.getUsername());
     }
 
-    @Test(expected = UserNotExistException.class)
-    public void findByIdNotExist() throws UserNotExistException {
+    @Test
+    public void findByIdNotExist() {
         final Long id = user.getId() + 1;
 
         Optional<User> userFromDb = userRepository.findById(id);
 
-        assertThat(userFromDb.orElseThrow(() -> new UserNotExistException(new EntityField(id.toString(), "id"))));
+        assertThat(userFromDb).isNotPresent();
     }
 
     @Test
@@ -109,7 +102,7 @@ public class UserRepositoryTest {
         User savedUser = userRepository.save(user);
         user.setId(savedUser.getId());
 
-        assertEquals(user, savedUser);
+        assertThat(savedUser).isEqualTo(user);
     }
 
     @Test
@@ -123,7 +116,7 @@ public class UserRepositoryTest {
 
         User updatedUser = userRepository.save(user);
 
-        assertEquals(user, updatedUser);
+        assertThat(updatedUser).isEqualTo(user);
     }
 
     @Test
@@ -136,6 +129,7 @@ public class UserRepositoryTest {
 
         Optional<User> deletedUser = userRepository.findById(id);
 
-        assertNotEquals(userFromDb.isPresent(), deletedUser.isPresent());
+        assertThat(userFromDb).isPresent();
+        assertThat(deletedUser).isNotPresent();
     }
 }

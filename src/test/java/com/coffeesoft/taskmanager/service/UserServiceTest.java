@@ -4,13 +4,12 @@ import com.coffeesoft.taskmanager.exception.UserExistException;
 import com.coffeesoft.taskmanager.exception.UserNotExistException;
 import com.coffeesoft.taskmanager.model.User;
 import com.coffeesoft.taskmanager.repository.UserRepository;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.HashSet;
@@ -18,7 +17,6 @@ import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-@RunWith(SpringRunner.class)
 @SpringBootTest
 @AutoConfigureTestDatabase
 @Transactional
@@ -31,7 +29,7 @@ public class UserServiceTest {
 
     private User user;
 
-    @Before
+    @BeforeEach
     public void setUp() {
         user = new User();
         user.setFullName("Ivan Ivanov");
@@ -72,13 +70,10 @@ public class UserServiceTest {
         assertThat(userFromDb).isEqualTo(user);
     }
 
-    @Test(expected = UserNotExistException.class)
-    public void getUserByIdNotExist() throws UserNotExistException {
+    @Test
+    public void getUserByIdNotExist() {
         final Long id = user.getId() + 1;
-
-        User userFromDb = userService.getUserById(id);
-
-        assertThat(userFromDb).isNull();
+        Assertions.assertThrows(UserNotExistException.class, () -> userService.getUserById(id));
     }
 
     @Test
@@ -94,16 +89,14 @@ public class UserServiceTest {
         assertThat(userCreated).isEqualTo(user);
     }
 
-    @Test(expected = UserExistException.class)
-    public void createUserIfExist() throws UserExistException {
+    @Test
+    public void createUserIfExist() {
         User user = new User();
         user.setFullName("Ivan Ivanov");
         user.setUsername("ivan_ivanov");
         user.setPassword("parolyaNet0");
 
-        User userCreated = userService.createUser(user);
-
-        assertThat(userCreated).isNull();
+        Assertions.assertThrows(UserExistException.class, () -> userService.createUser(user));
     }
 
     @Test
@@ -120,7 +113,7 @@ public class UserServiceTest {
         assertThat(updatedUser).isEqualTo(user);
     }
 
-    @Test(expected = UserNotExistException.class)
+    @Test
     public void deleteUser() throws UserNotExistException {
         final Long id = user.getId();
 
@@ -128,8 +121,6 @@ public class UserServiceTest {
 
         userService.deleteUserById(id);
 
-        User deleteUser = userService.getUserById(id);
-
-        assertThat(deleteUser).isNull();
+        Assertions.assertThrows(UserNotExistException.class, () -> userService.getUserById(id));
     }
 }
