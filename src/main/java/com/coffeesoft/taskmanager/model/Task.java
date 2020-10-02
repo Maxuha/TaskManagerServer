@@ -26,7 +26,7 @@ public class Task {
     private String title;
     @Column(name = "description")
     private String description;
-    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     @DateTimeFormat(pattern = "dd-MM-yyyy HH:mm:ss")
     @Column(name = "time")
     private LocalDateTime time;
