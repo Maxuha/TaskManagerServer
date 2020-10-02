@@ -53,9 +53,8 @@ public class UserController {
         ResponseEntity<?> responseEntity;
         try {
             User userDb = userService.createUser(user);
-            String message = String.format("Created user: %s", userDb);
-            responseEntity = ResponseEntity.created(getUri(userDb.getId())).body(message);
-            logger.info(message);
+            responseEntity = ResponseEntity.created(getUri(userDb.getId())).body(userDb);
+            logger.info("Created user: {}", userDb);
         } catch (ExistException e) {
             responseEntity = ResponseEntity.status(HttpStatus.CONFLICT).body(e.getMessage());
             logger.warn("Failed to create: " + e.getMessage());
@@ -77,9 +76,8 @@ public class UserController {
             userDB.setFullName(user.getFullName());
             userDB.setTasks(user.getTasks());
             userDB = userService.updateUser(userDB);
-            String message = String.format("Updated user with id %d from %s to %s", id, user, userDB);
-            responseEntity = ResponseEntity.ok().body(message);
-            logger.info(message);
+            responseEntity = ResponseEntity.ok().body(userDB);
+            logger.info("Updated user with id {} from {} to {}", id, user, userDB);
         } catch (NotExistException e) {
             responseEntity = ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
             logger.warn("Failed to update: " + e.getMessage());
