@@ -119,9 +119,9 @@ public class UserControllerTest {
         final String username = "ivan_ivanov2";
         final String fullName = "Ivan Ivanov2";
         final String password = "parolyaNet1";
-        Set<Task> tasks = new HashSet<>();
-        User newUser = new User(null, fullName, username, password, tasks);
-        User createdUser = new User(user.getId() + 1, fullName, username, password, tasks);
+        User newUser = new User(fullName, username, password);
+        User createdUser = new User(fullName, username, password);
+        createdUser.setId(user.getId() + 1);
 
         Mockito.when(userServiceMock.createUser(newUser)).thenReturn(createdUser);
 
@@ -131,7 +131,7 @@ public class UserControllerTest {
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .content(objectMapper.writeValueAsString(newUser))
                 ).andExpect(status().isCreated())
-                .andExpect(content().string("Created user: " + createdUser))
+                .andExpect(content().string(objectMapper.writeValueAsString(createdUser)))
                 .andDo(print())
                 .andReturn();
     }
@@ -141,8 +141,7 @@ public class UserControllerTest {
         final String username = "ivan_ivanov";
         final String fullName = "Ivan Ivanov";
         final String password = "parolyaNet0";
-        Set<Task> tasks = new HashSet<>();
-        User newUser = new User(null, fullName, username, password, tasks);
+        User newUser = new User(fullName, username, password);
         final String url = "/api/user";
 
         mockMvc.perform(
@@ -160,19 +159,19 @@ public class UserControllerTest {
         final String username = "ivan_ivanov";
         final String fullName = "Ivan Ivanov 3";
         final String password = "parolyaNet2";
-        final Long id = user.getId();
-        Set<Task> tasks = new HashSet<>();
-        User newUser = new User(id, fullName, username, password, tasks);
+        User newUser = new User(fullName, username, password);
+        User updatedUser = new User(fullName, username, password);
+        updatedUser.setId(user.getId());
 
         Mockito.when(userServiceMock.updateUser(newUser)).thenReturn(newUser);
 
-        final String url = String.format("/api/user/%d", newUser.getId());
+        final String url = String.format("/api/user/%d", user.getId());
         mockMvc.perform(
                 put(url)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .content(objectMapper.writeValueAsString(newUser))
                 ).andExpect(status().isOk())
-                .andExpect(content().string(String.format("Updated user with id %d from %s to %s", user.getId(), user, newUser)))
+                .andExpect(content().string(objectMapper.writeValueAsString(updatedUser)))
                 .andDo(print())
                 .andReturn();
     }
