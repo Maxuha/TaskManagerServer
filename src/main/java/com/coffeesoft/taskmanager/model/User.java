@@ -20,14 +20,19 @@ public class User {
                         sequenceName = "SEQ_USER", allocationSize = 1)
     @Column(name = "id", nullable = false, updatable = false, unique = true)
     private Long id;
+    @NonNull
     @Column(name = "full_name", nullable = false, length = 36)
     private String fullName;
+    @NonNull
     @UsernameConstraint
     @Column(name = "username", nullable = false, updatable = false, unique = true)
     private String username;
+    @NonNull
     @PasswordConstraint
     @Column(name = "password", nullable = false)
     private String password;
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "user")
     private Set<Task> tasks;
+    @OneToOne(fetch = FetchType.EAGER)
+    private Task currentTask;
 }
