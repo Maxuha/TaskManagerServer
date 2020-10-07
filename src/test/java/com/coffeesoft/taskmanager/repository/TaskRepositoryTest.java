@@ -89,6 +89,14 @@ public class TaskRepositoryTest {
     }
 
     @Test
+    public void findAllContentByUserId() {
+        final Long userId = user.getId();
+        List<Task> tasks = taskRepository.findByUserId(userId);
+
+        assertThat(tasks.get(0)).isEqualTo(task);
+    }
+
+    @Test
     public void findNextOrCurrentTaskAfterTimeByUserIdExist() {
         final Long userId = user.getId();
 
