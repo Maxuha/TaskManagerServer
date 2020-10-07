@@ -28,7 +28,7 @@ public class Task {
     private String description;
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     @DateTimeFormat(pattern = "dd-MM-yyyy HH:mm:ss")
-    @Column(name = "time")
+    @Column(name = "time", nullable = false)
     private LocalDateTime time;
     @NonNull
     @DateTimeFormat(pattern = "dd-MM-yyyy HH:mm:ss")
@@ -40,7 +40,7 @@ public class Task {
     private LocalDateTime endTime;
     @Column(name = "sleep_interval")
     private Integer sleepInterval;
-    @Column(name = "work_interval")
+    @Column(name = "work_interval", nullable = false)
     private Integer workInterval;
     @NonNull
     @Column(name = "active", nullable = false)
