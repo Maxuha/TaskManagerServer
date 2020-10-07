@@ -4,8 +4,11 @@ import com.coffeesoft.taskmanager.model.Task;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
+import java.time.LocalDateTime;
+import java.util.Optional;
+
 public interface TaskRepository extends JpaRepository<Task, Long> {
-    @Query(value = "SELECT * FROM task WHERE time > current_timestamp ORDER BY time DESC LIMIT 1",
+    @Query(value = "SELECT * FROM task WHERE time > ?1 AND user_id = ?2 ORDER BY time DESC LIMIT 1",
     nativeQuery = true)
-    Task findNextOrCurrentTaskByUserId(Long userId);
+    Optional<Task> findNextOrCurrentTaskAfterTimeByUserId(LocalDateTime time, Long userId);
 }
