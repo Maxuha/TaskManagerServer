@@ -13,6 +13,6 @@ public interface TaskService {
     Task getTaskById(Long id) throws TaskNotExistException;
     Task getNextOrCurrentTaskAfterTimeByUserId(LocalDateTime time, Long userId) throws TaskByUserNotExistException;
     Task createTask(Task task);
-    Task update(Task task);
+    Task updateTask(Task task);
     void deleteTaskById(Long id);
 }
