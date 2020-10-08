@@ -146,7 +146,7 @@ class TaskServiceImplTest {
         Task task = new Task(id, title, description, startTime, startTime, endTime, (int) sleepInterval,
                 (int) workInterval, active, repeat, sleep, user);
 
-        Task updatedTask = taskService.update(task);
+        Task updatedTask = taskService.updateTask(task);
 
         assertThat(updatedTask).isEqualTo(task);
     }
