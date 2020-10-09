@@ -2,6 +2,7 @@ package com.coffeesoft.taskmanager.model;
 
 import com.coffeesoft.taskmanager.annotation.validator.PasswordConstraint;
 import com.coffeesoft.taskmanager.annotation.validator.UsernameConstraint;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
 
@@ -34,9 +35,7 @@ public class User {
     @PasswordConstraint
     @Column(name = "password", nullable = false)
     private String password;
+    @JsonManagedReference
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "user")
     private Set<Task> tasks;
-    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
-    @OneToOne(fetch = FetchType.EAGER)
-    private Task currentTask;
 }
