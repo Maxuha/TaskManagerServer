@@ -1,5 +1,6 @@
 package com.coffeesoft.taskmanager.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -51,6 +52,7 @@ public class Task {
     @NonNull
     @Column(name = "sleep", nullable = false)
     private Boolean sleep;
+    @JsonBackReference
     @NonNull
     @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinColumn(name = "user_id", nullable = false)
