@@ -36,7 +36,4 @@ public class User {
     private String password;
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "user")
     private Set<Task> tasks;
-    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
-    @OneToOne(fetch = FetchType.EAGER)
-    private Task currentTask;
 }
