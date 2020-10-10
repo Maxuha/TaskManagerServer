@@ -21,6 +21,7 @@ public class Task {
     @SequenceGenerator(name = "task_seq",
                         sequenceName = "SEQ_TASK", allocationSize = 1)
     @Column(name = "id", updatable = false, nullable = false)
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private Long id;
     @NonNull
     @Column(name = "title", nullable = false, length = 64)
@@ -52,6 +53,10 @@ public class Task {
     @NonNull
     @Column(name = "sleep", nullable = false)
     private Boolean sleep;
+    @NonNull
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
+    @Column(name = "task_state", nullable = false)
+    private TaskState taskState;
     @JsonBackReference
     @NonNull
     @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
