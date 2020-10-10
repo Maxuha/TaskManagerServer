@@ -1,5 +1,6 @@
 package com.coffeesoft.taskmanager.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -19,7 +20,8 @@ public class Task {
                     generator = "task_seq")
     @SequenceGenerator(name = "task_seq",
                         sequenceName = "SEQ_TASK", allocationSize = 1)
-    @Column(name = "id", updatable = false, nullable = false)
+    @Column(name = "id", updatable = false, nullable = false, unique = true)
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private Long id;
     @NonNull
     @Column(name = "title", nullable = false, length = 64)
@@ -51,6 +53,11 @@ public class Task {
     @NonNull
     @Column(name = "sleep", nullable = false)
     private Boolean sleep;
+    @NonNull
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
+    @Column(name = "task_state", nullable = false)
+    private TaskState taskState;
+    @JsonBackReference
     @NonNull
     @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinColumn(name = "user_id", nullable = false)

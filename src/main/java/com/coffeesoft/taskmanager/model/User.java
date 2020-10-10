@@ -2,12 +2,14 @@ package com.coffeesoft.taskmanager.model;
 
 import com.coffeesoft.taskmanager.annotation.validator.PasswordConstraint;
 import com.coffeesoft.taskmanager.annotation.validator.UsernameConstraint;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
 
 import javax.persistence.*;
 import java.util.Set;
 
+@EqualsAndHashCode(exclude="tasks")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -21,6 +23,7 @@ public class User {
     @SequenceGenerator(name = "user_seq",
                         sequenceName = "SEQ_USER", allocationSize = 1)
     @Column(name = "id", nullable = false, updatable = false, unique = true)
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private Long id;
     @NonNull
     @Column(name = "full_name", nullable = false, length = 36)
@@ -33,9 +36,7 @@ public class User {
     @PasswordConstraint
     @Column(name = "password", nullable = false)
     private String password;
+    @JsonManagedReference
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "user")
     private Set<Task> tasks;
-    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
-    @OneToOne(fetch = FetchType.EAGER)
-    private Task currentTask;
 }
