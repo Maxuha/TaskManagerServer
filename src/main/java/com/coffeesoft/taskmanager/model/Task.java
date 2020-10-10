@@ -53,7 +53,6 @@ public class Task {
     @NonNull
     @Column(name = "sleep", nullable = false)
     private Boolean sleep;
-    @NonNull
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     @Column(name = "task_state", nullable = false)
     private TaskState taskState;
