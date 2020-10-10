@@ -20,7 +20,7 @@ public class Task {
                     generator = "task_seq")
     @SequenceGenerator(name = "task_seq",
                         sequenceName = "SEQ_TASK", allocationSize = 1)
-    @Column(name = "id", updatable = false, nullable = false)
+    @Column(name = "id", updatable = false, nullable = false, unique = true)
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private Long id;
     @NonNull
