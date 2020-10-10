@@ -7,6 +7,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.time.ZoneOffset;
 
 @Data
 @NoArgsConstructor
@@ -53,6 +54,7 @@ public class Task {
     @NonNull
     @Column(name = "sleep", nullable = false)
     private Boolean sleep;
+    @NonNull
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     @Column(name = "task_state", nullable = false)
     private TaskState taskState;
@@ -61,4 +63,44 @@ public class Task {
     @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
+
+    public void setTaskStateAndNextTimeAfter(LocalDateTime current) {
+        if (!active) {
+            taskState = TaskState.DISABLE;
+        }
+
+        if (time == null) {
+            time = startTime;
+        }
+
+        if (!time.isAfter(current)) {
+            if (taskState == TaskState.DISABLE) {
+                taskState = TaskState.START;
+            } else if (taskState == TaskState.START) {
+                time = time.plusMinutes(workInterval);
+                taskState = TaskState.WORK;
+            } else if (taskState == TaskState.WORK) {
+                if (sleep) {
+                    time = time.plusMinutes(sleepInterval);
+                    taskState = TaskState.SLEEP;
+                }
+            } else if (taskState == TaskState.SLEEP) {
+                taskState = TaskState.START;
+            }
+        }
+    }
+
+    public void setTime(LocalDateTime time) {
+        if (time == null) {
+            this.time = startTime;
+        } else {
+            this.time = time;
+        }
+    }
+
+    public void setWorkInterval(int workInterval) {
+        if (workInterval == 0) {
+            this.workInterval = (int) (endTime.toEpochSecond(ZoneOffset.UTC) - startTime.toEpochSecond(ZoneOffset.UTC));
+        }
+    }
 }
