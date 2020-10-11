@@ -89,18 +89,4 @@ public class Task {
             }
         }
     }
-
-    public void setTime(LocalDateTime time) {
-        if (time == null) {
-            this.time = startTime;
-        } else {
-            this.time = time;
-        }
-    }
-
-    public void setWorkInterval(int workInterval) {
-        if (workInterval == 0) {
-            this.workInterval = (int) (endTime.toEpochSecond(ZoneOffset.UTC) - startTime.toEpochSecond(ZoneOffset.UTC));
-        }
-    }
 }
