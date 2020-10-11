@@ -23,6 +23,7 @@ public class User {
     @SequenceGenerator(name = "user_seq",
                         sequenceName = "SEQ_USER", allocationSize = 1)
     @Column(name = "id", nullable = false, updatable = false, unique = true)
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private Long id;
     @NonNull
     @Column(name = "full_name", nullable = false, length = 36)

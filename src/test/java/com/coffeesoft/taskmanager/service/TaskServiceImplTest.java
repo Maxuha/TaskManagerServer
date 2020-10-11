@@ -3,6 +3,7 @@ package com.coffeesoft.taskmanager.service;
 import com.coffeesoft.taskmanager.exception.TaskByUserNotExistException;
 import com.coffeesoft.taskmanager.exception.TaskNotExistException;
 import com.coffeesoft.taskmanager.model.Task;
+import com.coffeesoft.taskmanager.model.TaskState;
 import com.coffeesoft.taskmanager.model.User;
 import com.coffeesoft.taskmanager.repository.TaskRepository;
 import org.junit.jupiter.api.Assertions;
@@ -44,7 +45,7 @@ class TaskServiceImplTest {
 
         user = new User("Ivan Ivanov", "ivan_ivanov", "parolyaNet0");
 
-        task = new Task(title, startTime, endTime, active, repeat, sleep, user);
+        task = new Task(title, startTime, endTime, active, repeat, sleep, TaskState.DISABLE, user);
         task.setTime(startTime);
         task.setWorkInterval((int) (endTime.toEpochSecond(ZoneOffset.UTC) - startTime.toEpochSecond(ZoneOffset.UTC)));
 
@@ -121,8 +122,7 @@ class TaskServiceImplTest {
         final boolean repeat = false;
         final boolean sleep = false;
 
-        Task task = new Task(title, startTime, endTime, active, repeat, sleep, user);
-        task.setTime(startTime);
+        Task task = new Task(title, startTime, endTime, active, repeat, sleep, TaskState.DISABLE, user);
         task.setWorkInterval((int) (endTime.toEpochSecond(ZoneOffset.UTC) - startTime.toEpochSecond(ZoneOffset.UTC)));
 
         Task createdTask = taskService.createTask(task);
@@ -144,7 +144,7 @@ class TaskServiceImplTest {
         final long workInterval = startTime.toEpochSecond(ZoneOffset.UTC) - endTime.toEpochSecond(ZoneOffset.UTC);
 
         Task task = new Task(id, title, description, startTime, startTime, endTime, (int) sleepInterval,
-                (int) workInterval, active, repeat, sleep, user);
+                (int) workInterval, active, repeat, sleep, TaskState.DISABLE, user);
 
         Task updatedTask = taskService.updateTask(task);
 
