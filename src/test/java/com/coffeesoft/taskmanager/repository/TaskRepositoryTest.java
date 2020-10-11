@@ -1,6 +1,7 @@
 package com.coffeesoft.taskmanager.repository;
 
 import com.coffeesoft.taskmanager.model.Task;
+import com.coffeesoft.taskmanager.model.TaskState;
 import com.coffeesoft.taskmanager.model.User;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -40,7 +41,7 @@ public class TaskRepositoryTest {
 
         user = new User("Ivan Ivanov", "ivan_ivanov", "parolyaNet0");
 
-        task = new Task(title, startTime, endTime, active, repeat, sleep, user);
+        task = new Task(title, startTime, endTime, active, repeat, sleep, TaskState.DISABLE, user);
         task.setTime(startTime);
         task.setWorkInterval((int) (endTime.toEpochSecond(ZoneOffset.UTC) - startTime.toEpochSecond(ZoneOffset.UTC)));
 
@@ -74,7 +75,7 @@ public class TaskRepositoryTest {
         final Long id = task.getId();
 
         Optional<Task> taskFromDb = taskRepository.findById(id);
-        System.out.println(taskFromDb);
+
         assertThat(taskFromDb).isPresent();
         assertThat(taskFromDb.get().getTitle()).isEqualTo(task.getTitle());
     }
@@ -126,7 +127,7 @@ public class TaskRepositoryTest {
         final boolean repeat = false;
         final boolean sleep = false;
 
-        Task task = new Task(title, startTime, endTime, active, repeat, sleep, user);
+        Task task = new Task(title, startTime, endTime, active, repeat, sleep, TaskState.DISABLE, user);
         task.setTime(startTime);
         task.setWorkInterval((int) (endTime.toEpochSecond(ZoneOffset.UTC) - startTime.toEpochSecond(ZoneOffset.UTC)));
 
@@ -150,7 +151,7 @@ public class TaskRepositoryTest {
         final long workInterval = startTime.toEpochSecond(ZoneOffset.UTC) - endTime.toEpochSecond(ZoneOffset.UTC);
 
         Task task = new Task(id, title, description, startTime, startTime, endTime, (int) sleepInterval,
-                (int) workInterval, active, repeat, sleep, user);
+                (int) workInterval, active, repeat, sleep, TaskState.DISABLE, user);
 
         Task updatedTask = taskRepository.save(task);
 
