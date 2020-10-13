@@ -45,9 +45,10 @@ class TaskServiceImplTest {
 
         user = new User("Ivan Ivanov", "ivan_ivanov", "parolyaNet0");
 
-        task = new Task(title, startTime, endTime, active, repeat, sleep, TaskState.DISABLE, user);
+        task = new Task(title, startTime, endTime, active, repeat, sleep, user);
         task.setTime(startTime);
         task.setWorkInterval((int) (endTime.toEpochSecond(ZoneOffset.UTC) - startTime.toEpochSecond(ZoneOffset.UTC)));
+        task.setTaskState(TaskState.DISABLE);
 
         taskRepository.save(task);
     }
@@ -122,7 +123,7 @@ class TaskServiceImplTest {
         final boolean repeat = false;
         final boolean sleep = false;
 
-        Task task = new Task(title, startTime, endTime, active, repeat, sleep, TaskState.DISABLE, user);
+        Task task = new Task(title, startTime, endTime, active, repeat, sleep, user);
         task.setWorkInterval((int) (endTime.toEpochSecond(ZoneOffset.UTC) - startTime.toEpochSecond(ZoneOffset.UTC)));
 
         Task createdTask = taskService.createTask(task);

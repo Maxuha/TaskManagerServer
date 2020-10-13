@@ -4,6 +4,7 @@ import com.coffeesoft.taskmanager.exception.TaskByUserNotExistException;
 import com.coffeesoft.taskmanager.exception.TaskNotExistException;
 import com.coffeesoft.taskmanager.model.EntityField;
 import com.coffeesoft.taskmanager.model.Task;
+import com.coffeesoft.taskmanager.model.TaskState;
 import com.coffeesoft.taskmanager.repository.TaskRepository;
 import org.springframework.stereotype.Service;
 
@@ -48,6 +49,11 @@ public class TaskServiceImpl implements TaskService {
     @Override
     public Task createTask(Task task) {
         task.setTime(task.getStartTime());
+        task.setTaskState(TaskState.DISABLE);
+        if (task.getWorkInterval() == null) {
+            task.setWorkInterval((int) (task.getEndTime().toEpochSecond(ZoneOffset.UTC) -
+                    task.getStartTime().toEpochSecond(ZoneOffset.UTC)));
+        }
         return taskRepository.save(task);
     }
 
