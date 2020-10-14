@@ -66,6 +66,7 @@ public class Task {
     public void setTaskStateAndNextTimeAfter(LocalDateTime current) {
         if (!active) {
             taskState = TaskState.DISABLE;
+            return;
         }
 
         if (time == null) {
