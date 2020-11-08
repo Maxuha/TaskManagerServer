@@ -7,8 +7,8 @@ import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
-import java.time.ZoneOffset;
 
+@ToString(exclude = "user")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor

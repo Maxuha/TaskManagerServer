@@ -9,6 +9,7 @@ import java.util.List;
 public interface UserService {
     List<User> getUsers();
     User getUserById(Long id) throws UserNotExistException;
+    User getUserByUsername(String id) throws UserNotExistException;
     User createUser(User user) throws UserExistException;
     User updateUser(User user);
     void deleteUserById(Long id);

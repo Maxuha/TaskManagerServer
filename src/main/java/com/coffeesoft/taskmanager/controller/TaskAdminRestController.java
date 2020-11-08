@@ -8,9 +8,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.time.Instant;
@@ -18,30 +20,33 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.Collection;
 
+@CrossOrigin(origins = "*")
 @RestController
-@RequestMapping(path = "/api")
-public class TaskController {
+@RequestMapping(path = "/api/admin")
+public class TaskAdminRestController {
     private static final Logger logger = LoggerFactory.getLogger(UserController.class);
     private final TaskService taskService;
 
-    public TaskController(TaskService taskService) {
+    public TaskAdminRestController(TaskService taskService) {
         this.taskService = taskService;
     }
 
     @GetMapping(path = "/tasks")
+    @PreAuthorize("hasAuthority('tasks:read')")
     public Collection<Task> tasks() {
         logger.info("Request to get all tasks");
         return taskService.getTasks();
     }
 
-
     @GetMapping(path = "/user/{userId}/tasks")
+    @PreAuthorize("hasAuthority('tasks:read')")
     public Collection<Task> getTasksByUserId(@PathVariable Long userId) {
         logger.info("Request to get user's all tasks");
         return taskService.getTasksByUserId(userId);
     }
 
     @GetMapping(path = "/task/{id}")
+    @PreAuthorize("hasAuthority('tasks:read')")
     public ResponseEntity<?> getTask(@PathVariable Long id) {
         logger.info("Request to get task with id: {}", id);
         ResponseEntity<?> responseEntity;
@@ -56,6 +61,7 @@ public class TaskController {
     }
 
     @GetMapping(path = "/user/{userId}/task/{after}")
+    @PreAuthorize("hasAuthority('tasks:read')")
     public ResponseEntity<?> getNextOrCurrentTaskAfterTimeByUserId(@PathVariable Long userId, @PathVariable Long after) {
         LocalDateTime time = LocalDateTime.ofInstant(Instant.ofEpochMilli(after * 1000), ZoneId.systemDefault());
         logger.info("Request to get next or current task after time {} by user id: {}", time, userId);
@@ -73,7 +79,8 @@ public class TaskController {
 
     @PostMapping(path = "/task")
     @ResponseStatus(HttpStatus.CREATED)
-    public ResponseEntity<?> createTask(@Validated @RequestBody Task task) throws URISyntaxException {
+    @PreAuthorize("hasAuthority('tasks:write')")
+    public ResponseEntity<?> createTask(@Valid @RequestBody Task task) throws URISyntaxException {
         logger.info("Request to create task: {}", task);
         Task taskDb = taskService.createTask(task);
         ResponseEntity<?> responseEntity = ResponseEntity.created(getUri(taskDb.getId())).body(taskDb);
@@ -86,6 +93,7 @@ public class TaskController {
     }
 
     @PutMapping(path = "/task/{id}")
+    @PreAuthorize("hasAuthority('tasks:write')")
     public ResponseEntity<?> updateTask(@Validated @RequestBody Task task, @PathVariable Long  id) {
         logger.info("Request to update task: {}", id);
         ResponseEntity<?> responseEntity;
@@ -112,7 +120,8 @@ public class TaskController {
     }
 
     @DeleteMapping(path = "/task/{id}")
-    public ResponseEntity<?> deleteUser(@PathVariable Long id) {
+    @PreAuthorize("hasAuthority('tasks:write')")
+    public ResponseEntity<?> deleteTask(@PathVariable Long id) {
         logger.info("Request to delete task: {}", id);
         ResponseEntity<?> responseEntity;
         try {

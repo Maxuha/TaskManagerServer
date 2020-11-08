@@ -1,5 +1,6 @@
 package com.coffeesoft.taskmanager.service;
 
+import com.coffeesoft.taskmanager.exception.NotExistException;
 import com.coffeesoft.taskmanager.exception.TaskByUserNotExistException;
 import com.coffeesoft.taskmanager.exception.TaskNotExistException;
 import com.coffeesoft.taskmanager.model.EntityField;
@@ -41,7 +42,13 @@ public class TaskServiceImpl implements TaskService {
     }
 
     @Override
-    public Task getNextOrCurrentTaskAfterTimeByUserId(LocalDateTime time, Long userId) throws TaskByUserNotExistException  {
+    public Task getTaskByTaskIdAndUserId(Long taskId, Long userId) throws TaskByUserNotExistException {
+        return taskRepository.findByIdAndUserId(taskId, userId).orElseThrow(() ->
+                new TaskByUserNotExistException(userId));
+    }
+
+    @Override
+    public Task getNextOrCurrentTaskAfterTimeByUserId(LocalDateTime time, Long userId) throws TaskByUserNotExistException {
         return taskRepository.findNextOrCurrentTaskAfterTimeByUserId(time, userId).orElseThrow(() ->
                 new TaskByUserNotExistException(userId));
     }

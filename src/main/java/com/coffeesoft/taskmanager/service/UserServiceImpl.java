@@ -33,6 +33,13 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public User getUserByUsername(String username) throws UserNotExistException {
+        final String fieldName = "username";
+        return userRepository.findByUsername(username).orElseThrow(() ->
+                new UserNotExistException(new EntityField(username, fieldName)));
+    }
+
+    @Override
     public User createUser(User user) throws UserExistException {
         hasUser(user);
         return userRepository.save(user);

@@ -8,6 +8,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -15,6 +16,7 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.Collection;
 
+@CrossOrigin(origins = "*")
 @RestController
 @RequestMapping(path = "/api")
 public class UserController {
@@ -26,13 +28,21 @@ public class UserController {
     }
 
     @GetMapping(path = "/users")
+    @PreAuthorize("hasAuthority('developers:read')")
     public Collection<User> users() {
         logger.info("Request to get all users");
         return userService.getUsers();
     }
 
+    /*@GetMapping("/user")
+    public User getUser(Principal principal) throws UserNotExistException {
+        System.out.println(userService.getUserByUsername(principal.getName()));
+        return userService.getUserByUsername(principal.getName());
+    }*/
+
     @GetMapping(path = "/user/{id}")
-    public ResponseEntity<?> getUser(@PathVariable Long id) {
+    @PreAuthorize("hasAuthority('developers:read')")
+    public ResponseEntity<?> getUserById(@PathVariable Long id) {
         logger.info("Request to get user with id: {}", id);
         ResponseEntity<?> responseEntity;
         try {
@@ -47,6 +57,7 @@ public class UserController {
 
     @PostMapping(path = "/user")
     @ResponseStatus(HttpStatus.CREATED)
+    @PreAuthorize("hasAuthority('developers:read')")
     public ResponseEntity<?> createUser(@Validated @RequestBody User user) throws URISyntaxException {
         user.setId(null);
         logger.info("Request to create user: {}", user);
@@ -67,6 +78,7 @@ public class UserController {
     }
 
     @PutMapping(path = "/user/{id}")
+    @PreAuthorize("hasAuthority('developers:read')")
     public ResponseEntity<?> updateUser(@Validated @RequestBody User user, @PathVariable Long  id) {
         logger.info("Request to update user: {}", id);
         ResponseEntity<?> responseEntity;
@@ -86,6 +98,7 @@ public class UserController {
     }
 
     @DeleteMapping(path = "/user/{id}")
+    @PreAuthorize("hasAuthority('developers:read')")
     public ResponseEntity<?> deleteUser(@PathVariable Long id) {
         logger.info("Request to delete user: {}", id);
         ResponseEntity<?> responseEntity;
