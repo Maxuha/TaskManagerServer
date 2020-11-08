@@ -11,6 +11,7 @@ public interface TaskService {
     List<Task> getTasks();
     List<Task> getTasksByUserId(Long userId);
     Task getTaskById(Long id) throws TaskNotExistException;
+    Task getTaskByTaskIdAndUserId(Long taskId, Long userId) throws TaskByUserNotExistException;
     Task getNextOrCurrentTaskAfterTimeByUserId(LocalDateTime time, Long userId) throws TaskByUserNotExistException;
     Task createTask(Task task);
     Task updateTask(Task task);

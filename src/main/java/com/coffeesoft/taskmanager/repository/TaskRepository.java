@@ -14,4 +14,5 @@ public interface TaskRepository extends JpaRepository<Task, Long> {
     Optional<Task> findNextOrCurrentTaskAfterTimeByUserId(LocalDateTime time, Long userId);
 
     List<Task> findByUserId(Long userId);
+    Optional<Task> findByIdAndUserId(Long taskId, Long userId);
 }

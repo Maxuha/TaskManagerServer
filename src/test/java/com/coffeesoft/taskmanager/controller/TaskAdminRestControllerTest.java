@@ -35,7 +35,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureMockMvc
 @AutoConfigureTestDatabase
 @Transactional
-class TaskControllerTest {
+class TaskAdminRestControllerTest {
     @Autowired
     private MockMvc mockMvc;
 

@@ -33,9 +33,12 @@ public class User {
     @Column(name = "username", nullable = false, updatable = false, unique = true)
     private String username;
     @NonNull
-    @PasswordConstraint
     @Column(name = "password", nullable = false)
     private String password;
+    @Column(name = "status", nullable = false)
+    private Status status;
+    @Column(name = "role", nullable = false)
+    private Role role;
     @JsonManagedReference
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "user")
     private Set<Task> tasks;
